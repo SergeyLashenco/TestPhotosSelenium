@@ -6,13 +6,8 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 public class Application {
@@ -25,7 +20,7 @@ public class Application {
    private PageCopyPhotoToBoard pageCopyPhotoToBoard;
    private MiniPageBoard miniPageBoard;
    private SaveToBoard saveToBoard;
-   private Properties properties;
+
 
    public Application(String browser) {
       this.browser = browser;
@@ -35,7 +30,7 @@ public class Application {
       this.wb  = wb;
    }
 
-   public void init() throws MalformedURLException {
+   public void init()  {
       initDriver();
       wb.manage().window().maximize();
       wb.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
@@ -46,11 +41,9 @@ public class Application {
       pageCopyPhotoToBoard = new PageCopyPhotoToBoard(wb);
       miniPageBoard = new MiniPageBoard(wb);
       saveToBoard = new SaveToBoard(wb);
-      properties = new Properties();
    }
 
-   private void initDriver() throws MalformedURLException {
-      if( "".equals(properties.getProperty("selenium.server"))){
+   private void initDriver()  {
          if (browser == null || "chrome".equals(browser.toLowerCase())) {
             File file = new File("./src/drivers/chromedriver");
             System.setProperty("webdriver.chrome.driver", file.getAbsolutePath());
@@ -64,12 +57,6 @@ public class Application {
             profile.addArguments("--disable-notifications");
             wb = new FirefoxDriver();
          }
-      } else {
-         DesiredCapabilities capabilities = new DesiredCapabilities ();
-         capabilities.setBrowserName(browser);
-         wb = new RemoteWebDriver(new URL(properties.getProperty("selenium.server")), capabilities );
-      }
-
    }
 
 
